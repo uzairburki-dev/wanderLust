@@ -1,0 +1,63 @@
+<%- layout("layout/boilerplate") %>
+
+    <style>
+        @media(max-width: 576px) {
+            #map {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+        let coordinates = <%- JSON.stringify(listing.coordinates) %>;
+    </script>
+
+
+    <div class="row mt-3">
+        <div class="col-md-6 col-es-12 offset-md-3">
+            <h3>
+                <%= listing.title %>
+            </h3>
+        </div>
+        <div class="card col-md-6 col-es-12 offset-md-3 show-card">
+            <img src="<%=listing.image.Url %>" class="card-img-top show-img" alt="listing_img">
+            <div class="card-body">
+                <p class="card-text">
+                    Owned by: <i>
+                        <%= listing.owner.username %>
+                    </i>
+                </p>
+                <p class="card-text">
+                    <%= listing.description %>
+                </p>
+                <p class="card-text"> &#8377; <%= listing.price.toLocaleString("en-PK") %>
+                </p>
+                <p class="card-text">
+                    <%=listing.location %>
+                </p>
+                <p class="card-text">
+                    <%= listing.country %>
+                </p>
+            </div>
+        </div>
+
+        <% if(currUser && currUser._id.equals(listing.owner._id)) {%>
+            <div class="btns">
+                <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark col-es-3 offset-md-3 edit-btn">Edit</a>
+                <form method="POST" action="/listings/<%= listing._id %>?_method=delete">
+                    <button class="btn btn-dark offset-4">Delete</button>
+                </form>
+            </div>
+            <% } %>
+    </div>
+    <br><br>
+
+    <%- include("../reviews/review_form") %>
+        <% if(listing.reviews.length> 0) { %>
+            <%- include("../reviews/show_review") %>
+                <% } %>
+
+                    <div class="offset-md-3">
+                        <div id="map"></div>
+                        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+                        <script src="/js/map.js"></script>
+                    </div>

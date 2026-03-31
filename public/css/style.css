@@ -1,0 +1,234 @@
+html {
+    height: 100%;
+}
+
+main {
+    flex: 1;
+}
+
+body {
+    font-family: "Plus Jakarta Sans", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0rem 1rem 0 1rem;
+    padding: 0rem 1rem 0 1rem;
+}
+
+.navbar {
+    height: auto;
+    background-color: white;
+}
+
+.fa-compass {
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+.nav-link {
+    color: #222222 !important;
+    font-size: 1.15rem !important;
+}
+
+/* footer */
+
+.f-info-links a {
+    text-decoration: none;
+    color: #222222;
+}
+
+.f-info-links a:hover {
+    text-decoration: underline;
+}
+
+.f-info-links,
+.f-info-socials,
+.f-info-brand {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.f-info-socials a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+}
+
+.f-info {
+    text-align: center;
+    height: 8rem;
+    display: flex;
+    background-color: #ebebeb;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+/* cards */
+.card {
+    border: none !important;
+    margin-bottom: 2rem;
+}
+
+.card-img-top {
+    border-radius: 1rem !important;
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 0 !important;
+}
+
+.card-text p {
+    font-weight: 400 !important;
+}
+
+.listing-link {
+    text-decoration: none;
+}
+
+/* card effect */
+.card-img-overlay {
+    opacity: 0;
+}
+
+.card-img-overlay:hover {
+    opacity: 0.2;
+    background-color: white;
+}
+
+/* new page */
+.add-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+/* edit page */
+.edit-btn {
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+/* show image */
+.show-img {
+    height: 40vh;
+}
+
+.btns {
+    display: flex;
+}
+
+.show-card {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.m-100 {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    object-position: 50% 50%;
+}
+
+/* Review Card */
+.review-card {
+    border: 1px solid rgb(198, 196, 196) !important;
+}
+
+/* map */
+#map {
+    height: 400px;
+    width: 50vw;
+}
+
+/* icons */
+#slider {
+    display: flex;
+    text-wrap: wrap;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+#filters {
+    display: flex;
+}
+
+#filters a {
+    text-decoration: none;
+    color: black;
+}
+.filter {
+    margin: 2rem 2rem 0 0;
+    text-align: center;
+    opacity: 0.7;
+}
+
+.filter:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.filter p {
+    font-size: 0.8rem;
+}
+
+/* togger */
+.tax-info {
+    display: none;
+}
+
+.tax-toggler {
+    border: 1px solid black;
+    border-radius: 1rem;
+    margin: 0.5rem 0.25rem 0.5rem 1rem;
+    padding: 0.5rem 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.form-check-label {
+    width: 9rem;
+}
+
+#loginOverlay {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    z-index: 999;
+}
+
+#loginOverlay form {
+    background: #ffffff; /* white professional card */
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+
+}
+
+ .custom-select {
+    border-radius: 12px;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    transition: all 0.25s ease;
+    font-size: 15px;
+}
+
+
+
+
+
+
