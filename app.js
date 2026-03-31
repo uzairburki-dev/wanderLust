@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV != "production") {
-    require("dontenv").config();
+    require("dotenv").config();
 }
 //Imported Packages
 const express = require('express');
@@ -8,7 +8,7 @@ const methodOverride = require("method-override");
 const ejsMate = require('ejs-mate');
 const path = require('path');
 const session = require("express-session");
-const MongoStore = require("connect-mongo");
+const MongoStore = require('connect-mongo').default;
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -23,10 +23,21 @@ const { expression } = require('joi');
 const app = express();
 
 //Connection Variables
-const mongodbUrl = 'process.env.ATLAS_DBURL';
+const mongodbUrl = process.env.ATLAS_DBURL;
+// const mongodbUrl = "mongodb://localhost:27017/wanderlust"
 const port = 8080;
-const sessionOptions = {
+
+const store = MongoStore.create({
+    mongoUrl: mongodbUrl,
+    crypto: {
         secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 3600,
+}); 
+
+const sessionOptions = {
+    store,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -36,17 +47,11 @@ const sessionOptions = {
     },
 };
 
-const store = MongoStore.create({
-    mongoUrl: mongodbUrl,
-    crypto: {
-        secret: process.env.SECRET,
-    },
-    touchAfter: 24*3600,
-});
 
-store.on("error", ()=>{
+store.on("error", () => {
     console.log("ERROR_IN_MONGO_SESSION_STORE", err);
 })
+
 //essentials
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));

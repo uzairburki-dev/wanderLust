@@ -2,7 +2,7 @@ const Listing = require('../models/listingModel');
 const axios = require('axios');
 
 //function for geocoding
-module.exports.getGeo =async (location) =>{
+getGeo =async (location) =>{
     const geocodingUrl = `https://nominatim.openstreetmap.org/search?q=${location}&format=json&limit=1`;
 
     try {
@@ -18,6 +18,7 @@ module.exports.getGeo =async (location) =>{
         console.error("Error fetching geocoding:", err.response?.status, err.response?.statusText);
     }
 };
+
 
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find();
@@ -35,7 +36,7 @@ module.exports.create = async (req, res, next) => {
     newListing.owner = req.user._id;
     newListing.image = { Url, fileName };
 
-    const location = newListing.location + " , " + newListing.country;
+    const location = newListing.location;
     const coordinates = await getGeo(location);
     newListing.coordinates[0] = coordinates.lat;
     newListing.coordinates[1] = coordinates.lon;
@@ -75,10 +76,10 @@ module.exports.update = async (req, res) => {
     let { id } = req.params;
     let updatedListing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
 
-    const location = updatedListing.location + " , " + updatedListing.country;
+    const location = updatedListing.location;
     const getGeoData = await getGeo(location);
-    const coordinates = [getGeoData.lat, getGeoData.lon];
-    updatedListing = await Listing.findByIdAndUpdate(id, { coordinates: coordinates });
+    const newCoordinates = [getGeoData.lat, getGeoData.lon];
+    updatedListing = await Listing.findByIdAndUpdate(id, { coordinates: newCoordinates });
     await updatedListing.save();
 
     if (req.file) {
@@ -110,3 +111,5 @@ module.exports.filters = async (req, res) => {
     res.render("listings/index.ejs", { allListings });
 
 }
+
+module.exports.getGeo;
