@@ -1,4 +1,4 @@
-{
+{ "engine": { "node": "24.13.0" },
   "name": "wanderlust",
   "version": "1.0.0",
   "main": "app.js",
