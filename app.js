@@ -13,6 +13,12 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
+//App Connection
+app.listen(port, (req, res) => {
+    console.log("Server is Working");
+});
+
+const port = 8080;
 //Imported Files
 const ExpressError = require("./utils/expressError");
 const listingsRoutes = require("./Routes/listingsRoutes");
@@ -25,7 +31,6 @@ const app = express();
 //Connection Variables
 const mongodbUrl = process.env.ATLAS_DBURL;
 // const mongodbUrl = "mongodb://localhost:27017/wanderlust"
-const port = 8080;
 
 const store = MongoStore.create({
     mongoUrl: mongodbUrl,
@@ -117,7 +122,3 @@ app.use((err, req, res, next) => {
     }
 });
 
-//App Connection
-app.listen(port, (req, res) => {
-    console.log("Server is Working");
-});
