@@ -15,7 +15,7 @@ const LocalStrategy = require("passport-local");
 const app = express();
 
 //App Connection
-const port = 8080;
+const port = process.env.PORT || 8080;
 app.listen(port, (req, res) => {
     console.log("Server is Working");
 });
