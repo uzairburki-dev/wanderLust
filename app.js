@@ -94,6 +94,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get("/",(req,res)=>{
+    console.log("This is root route");
+})
+
 //Main Routes
 app.use("/listings", listingsRoutes);
 app.use("/listings/:id/reviews", reviewsRoutes);
