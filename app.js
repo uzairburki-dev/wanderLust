@@ -46,14 +46,15 @@ const sessionOptions = {
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expires: Date.now() + 1 * 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === "production",
+    expires: Date.now() + 1 * 24 * 60 * 60 * 1000,
         maxAge: 1 * 24 * 60 * 60 * 1000,
         httpOnly: true,
     },
 };
 
 
-store.on("error", () => {
+store.on("error", (err) => {
     console.log("ERROR_IN_MONGO_SESSION_STORE", err);
 })
 
@@ -75,8 +76,8 @@ passport.deserializeUser(UserModel.deserializeUser())
 
 //db Connection-function
 async function main() {
-    mongoose.connect(mongodbUrl);
-};
+    await mongoose.connect(mongodbUrl);
+}
 
 //function Call
 main().then(() => {
@@ -94,9 +95,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get("/",(req,res)=>{
-    console.log("This is root route");
-})
+app.get("/", (req, res) => {
+    res.send("This is root route");
+});
 
 //Main Routes
 app.use("/listings", listingsRoutes);
