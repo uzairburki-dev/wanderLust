@@ -12,13 +12,14 @@ const MongoStore = require('connect-mongo').default;
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const app = express();
 
 //App Connection
+const port = 8080;
 app.listen(port, (req, res) => {
     console.log("Server is Working");
 });
 
-const port = 8080;
 //Imported Files
 const ExpressError = require("./utils/expressError");
 const listingsRoutes = require("./Routes/listingsRoutes");
@@ -26,7 +27,6 @@ const reviewsRoutes = require("./Routes/reviewsRoutes");
 const usersRoutes = require("./Routes/usersRoutes");
 const UserModel = require("./models/userModel");
 const { expression } = require('joi');
-const app = express();
 
 //Connection Variables
 const mongodbUrl = process.env.ATLAS_DBURL;
