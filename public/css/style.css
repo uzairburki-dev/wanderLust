@@ -219,6 +219,12 @@ body {
 
 }
 
+@media (max-width: 500px){
+    #loginOverlay form {
+        max-width: 100vw;
+    }
+}
+
  .custom-select {
     border-radius: 12px;
     padding: 12px 14px;
