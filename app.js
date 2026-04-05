@@ -110,7 +110,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.get("/", (req, res) => {
-    res.redirect("/listings");
+    res.redirect("/login");
 });
 
 app.use("/listings", listingsRoutes);
