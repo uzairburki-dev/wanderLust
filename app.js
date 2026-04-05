@@ -2,21 +2,21 @@ if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
 
-// Imported Packages
+// Packages
 const express = require('express');
 const mongoose = require('mongoose');
 const methodOverride = require("method-override");
 const ejsMate = require('ejs-mate');
 const path = require('path');
 const session = require("express-session");
-const MongoStore = require('connect-mongo');
+let MongoStore = require('connect-mongo'); // FIXED
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 const app = express();
 
-// VERY IMPORTANT FOR VERCEL (fix cookies issue)
+// 🔥 VERCEL FIX
 app.set("trust proxy", 1);
 
 // Port
@@ -25,46 +25,50 @@ app.listen(port, () => {
     console.log("Server is Working");
 });
 
-// Imported Files
+// Routes & Models
 const ExpressError = require("./utils/expressError");
 const listingsRoutes = require("./Routes/listingsRoutes");
 const reviewsRoutes = require("./Routes/reviewsRoutes");
 const usersRoutes = require("./Routes/usersRoutes");
 const UserModel = require("./models/userModel");
 
-// MongoDB URL
+// DB URL
 const mongodbUrl = process.env.ATLAS_DBURL;
 
-// Session Store (MongoDB)
+// 🔥 FIX: handle all connect-mongo versions
+if (MongoStore.default) {
+    MongoStore = MongoStore.default;
+}
+
+// Session Store
 const store = MongoStore.create({
     mongoUrl: mongodbUrl,
     crypto: {
-        secret: process.env.SECRET,
+        secret: process.env.SECRET || "mysupersecret",
     },
     touchAfter: 24 * 3600,
 });
 
-// Session Config (FIXED)
+// Session Config
 const sessionOptions = {
     store,
-    secret: process.env.SECRET,
+    secret: process.env.SECRET || "mysupersecret",
     resave: false,
-    saveUninitialized: false, // IMPORTANT FIX
+    saveUninitialized: false,
     cookie: {
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         httpOnly: true,
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
         maxAge: 7 * 24 * 60 * 60 * 1000,
     },
 };
 
-// Error in session store
+// Store error
 store.on("error", (err) => {
-    console.log("ERROR_IN_MONGO_SESSION_STORE", err);
+    console.log("SESSION STORE ERROR:", err);
 });
 
-// Essentials
+// Middlewares
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
@@ -72,11 +76,11 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.engine('ejs', ejsMate);
 
-// Session middleware
+// Session
 app.use(session(sessionOptions));
 app.use(flash());
 
-// Passport setup
+// Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -84,16 +88,19 @@ passport.use(new LocalStrategy(UserModel.authenticate()));
 passport.serializeUser(UserModel.serializeUser());
 passport.deserializeUser(UserModel.deserializeUser());
 
-// MongoDB connection
+// DB connect
 async function main() {
-    await mongoose.connect(mongodbUrl);
+    try {
+        await mongoose.connect(mongodbUrl);
+        console.log("✅ DB CONNECTED");
+    } catch (err) {
+        console.log("❌ DB ERROR:", err);
+    }
 }
 
-main()
-    .then(() => console.log("Connected Successfully app to db"))
-    .catch((err) => console.log("error in connection", err));
+main();
 
-// Locals middleware
+// Locals
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
@@ -118,7 +125,7 @@ app.get("/privacy", (req, res) => {
     res.render("footer/privacy.ejs");
 });
 
-// 404 handler
+// 404
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
 });
