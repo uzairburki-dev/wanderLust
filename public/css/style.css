@@ -233,6 +233,30 @@ body {
     font-size: 15px;
 }
 
+/* navbar styling */
+.search-btn {
+    display: flex;
+    background-color: #fe424d;
+    color: #fff;
+    border-radius: 25px;
+    padding: 0 1rem 0 1rem;
+    align-items: center;
+  }
+
+  .search-btn:hover {
+    background-color: #fe424d;
+    color: #fff;
+  }
+
+  .search-btn>i {
+    margin-right: 0.5rem;
+  }
+
+  .search-input {
+    border-radius: 25px;
+    padding: 0.25rem 3rem 0.25rem 2.5rem;
+  }
+
 
 
 

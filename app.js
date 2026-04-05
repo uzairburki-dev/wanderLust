@@ -1,6 +1,7 @@
 if (process.env.NODE_ENV != "production") {
     require("dotenv").config();
 }
+
 //Imported Packages
 const express = require('express');
 const mongoose = require('mongoose');
@@ -26,12 +27,10 @@ const listingsRoutes = require("./Routes/listingsRoutes");
 const reviewsRoutes = require("./Routes/reviewsRoutes");
 const usersRoutes = require("./Routes/usersRoutes");
 const UserModel = require("./models/userModel");
-const { expression } = require('joi');
 
 //Connection Variables
-const mongodbUrl = process.env.ATLAS_DBURL;
-// const mongodbUrl = "mongodb://localhost:27017/wanderlust"
 
+const mongodbUrl = process.env.ATLAS_DBURL;
 const store = MongoStore.create({
     mongoUrl: mongodbUrl,
     crypto: {
@@ -39,7 +38,6 @@ const store = MongoStore.create({
     },
     touchAfter: 24 * 3600,
 }); 
-
 const sessionOptions = {
     store,
     secret: process.env.SECRET,
@@ -53,7 +51,7 @@ const sessionOptions = {
     },
 };
 
-
+// function to track the store building
 store.on("error", (err) => {
     console.log("ERROR_IN_MONGO_SESSION_STORE", err);
 })
@@ -67,7 +65,6 @@ app.set("view engine", "ejs");
 app.engine('ejs', ejsMate);
 app.use(session(sessionOptions));
 app.use(flash());
-
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(UserModel.authenticate()));
@@ -90,24 +87,20 @@ main().then(() => {
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    res.locals.login = req.flash("login");
     res.locals.currUser = req.user;
     next();
 });
 
+//Routes
 app.get("/", (req, res) => {
-    res.redirect("/login");
+    res.redirect("/listings");
 });
-
-//Main Routes
 app.use("/listings", listingsRoutes);
 app.use("/listings/:id/reviews", reviewsRoutes);
 app.use("/", usersRoutes);
-
 app.get("/terms", (req, res) => {
     res.render("footer/terms.ejs")
 });
-
 app.get("/privacy", (req, res) => {
     res.render("footer/privacy.ejs")
 });

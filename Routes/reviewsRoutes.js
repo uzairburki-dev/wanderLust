@@ -4,10 +4,8 @@ const router = express.Router({mergeParams: true});
 
 //Imported Files
 const wrapAsync = require("../utils/wrapAsync");
-
 const { isLoggedIn, validateReview , isReviewOwner} = require("../middlewares");
 const reviewController = require("../controller/review");
-
 
 //Add Review
 router.post("/", isLoggedIn, validateReview, wrapAsync(reviewController.addReview));

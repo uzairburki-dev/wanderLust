@@ -18,7 +18,6 @@ router.route("/")
 //new Route
 router.get('/new', isLoggedIn, listingControllers.new);
 router.get("/filter", listingControllers.filters);
-
 router.route("/:id")
     .get(wrapAsync(listingControllers.show))
     .put(isLoggedIn, isOwner, upload.single('listing[image]'), validateListing, wrapAsync(listingControllers.update))

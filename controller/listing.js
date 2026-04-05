@@ -4,7 +4,6 @@ const axios = require('axios');
 //function for geocoding
 getGeo =async (location) =>{
     const geocodingUrl = `https://nominatim.openstreetmap.org/search?q=${location}&format=json&limit=1`;
-
     try {
         const response = await axios.get(geocodingUrl, {
             headers: {
@@ -12,13 +11,11 @@ getGeo =async (location) =>{
                 'Accept-Language': 'en'
             }
         });
-
         return response.data[0];
     } catch (err) {
         console.error("Error fetching geocoding:", err.response?.status, err.response?.statusText);
     }
 };
-
 
 module.exports.index = async (req, res) => {
     const allListings = await Listing.find();
@@ -35,13 +32,10 @@ module.exports.create = async (req, res, next) => {
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = { Url, fileName };
-
     const location = newListing.location;
     const coordinates = await getGeo(location);
     newListing.coordinates[0] = coordinates.lat;
     newListing.coordinates[1] = coordinates.lon;
-
-    console.log(newListing);
     await newListing.save();
     req.flash("success", "Success! Your listing is now live.");
     res.redirect('/listings');
@@ -50,7 +44,6 @@ module.exports.create = async (req, res, next) => {
 module.exports.show = async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id).populate({ path: "reviews", populate: { path: "created_by" }, }).populate("owner");
-
     if (!listing) {
         req.flash("error", "Sorry, this listing is no longer available.");
         res.redirect("/listings");
@@ -71,26 +64,24 @@ module.exports.edit = async (req, res) => {
         res.render('listings/edit.ejs', { listing, originalUrl });
     }
 };
-
 module.exports.update = async (req, res) => {
     let { id } = req.params;
-    let updatedListing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-
-    const location = updatedListing.location;
-    const getGeoData = await getGeo(location);
-    const newCoordinates = [getGeoData.lat, getGeoData.lon];
-    updatedListing = await Listing.findByIdAndUpdate(id, { coordinates: newCoordinates });
-    await updatedListing.save();
-
-    if (req.file) {
-        let Url = req.file.path;
-        let fileName = req.file.filename;
-        updatedListing.image = { Url, fileName };
-
-        await updatedListing.save();
+    let updateData = { ...req.body.listing };
+    if (updateData.location) {
+        const getGeoData = await getGeo(updateData.location);
+        updateData.coordinates = [getGeoData.lat, getGeoData.lon];
     }
+    if (req.file) {
+        updateData.image = {
+            Url: req.file.path,
+            fileName: req.file.filename
+        };
+    }
+    const updatedListing = await Listing.findByIdAndUpdate(id, updateData, {
+        new: true, // returns updated document
+        runValidators: true
+    });
     req.flash("success", "listing updated");
-
     res.redirect(`/listings/${id}`);
 };
 
@@ -109,7 +100,6 @@ module.exports.filters = async (req, res) => {
         return res.redirect("/listings");
     }
     res.render("listings/index.ejs", { allListings });
-
 }
 
 module.exports.getGeo;

@@ -8,7 +8,6 @@ module.exports.isLoggedIn = (req, res, next) => {
         req.session.redirectUrl = req.originalUrl;
         req.flash("error", "Your are supposed to login First");
         return res.redirect('/login');
-        
     }
     next();
 };
